@@ -1,0 +1,27 @@
+su(?x,?U,!V) :- get_su(?x,?U) .
+su(?x,?V,?V) :- su(?x,?U,?V) .
+su(?y,?V,?V) :- su(?x,?U,?V), su(?y,?U,?U) .
+in(?x,?U) :- su(?x,?U,?U) .
+
+empty(es) .
+class(<http://www.w3.org/2002/07/owl#Thing>) .
+class(<http://www.w3.org/2002/07/owl#Nothing>) .
+get_su(?a,?E) :- class(?a), empty(?E) .
+
+ax_subtype(?c,<http://www.w3.org/2002/07/owl#Thing>) :- class(?c) .
+ax_subtype(<http://www.w3.org/2002/07/owl#Nothing>,?c) :- class(?c) .
+
+sc_sets(?H,?a) :- in(?a,?H) .
+
+sc_sets(?H,?c) :- sc_sets(?H,?a), ax_subtype(<http://www.w3.org/2002/07/owl#Thing>,?c) .
+sc_sets(?H,?c) :- sc_sets(?H,?a1), ax_subtype(?a1,?c) .
+sc_sets(?H,?c) :- sc_sets(?H,?a1), sc_sets(?H,?a2), ax_subtype_con(?a1,?a2,?c) .
+
+ex(?H,?r,?B) :- sc_sets(?H,?a), ax_some_pl(?a,?r,?b), empty(?E), su(?b,?E,?B) .
+sc_sets(?H,?b) :- ex(?H,?r,?K), sc_sets(?K,?a), ax_some_min(?r,?a,?b) .
+sc_sets(?H,<http://www.w3.org/2002/07/owl#Nothing>) :- ex(?H,?r,?K), sc_sets(?K,<http://www.w3.org/2002/07/owl#Nothing>) .
+
+get_su(?b,?K) :- ex(?H,?r,?K), sc_sets(?H,?a), ax_all(?r,?a,?b) .
+ex(?H,?r,?U) :- su(?b,?K,?U), ex(?H,?r,?K), sc_sets(?H,?a), ax_all(?a,?r,?b) .
+
+sc(?A,?C) :- sc_sets(?H,?C), su(?A,?E,?H), empty(?E) .

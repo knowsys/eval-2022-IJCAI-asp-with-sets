@@ -1,0 +1,10 @@
+same(C,C) :- class(C) .
+
+in_anti(C) :- class(C), not out_anti(C) .
+out_anti(C) :- class(C), not in_anti(C) .
+
+comp(C) :- class(C), sc(C,D), in_anti(D), not same(C,D) .
+comp(D) :- class(C), sc(C,D), in_anti(C), not same(C,D) .
+
+:- in_anti(C), comp(C) .
+:- out_anti(C), not comp(C) .

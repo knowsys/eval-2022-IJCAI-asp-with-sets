@@ -1,0 +1,10 @@
+same(?C,?C) :- class(?C) .
+
+in_anti(?C) :- class(?C), ~out_anti(?C) .
+out_anti(?C) :- class(?C), ~in_anti(?C) .
+
+comp(?C) :- class(?C), in_anti(?D), sc(?C,?D), ~same(?C,?D) .
+comp(?D) :- class(?C), in_anti(?C), sc(?C,?D), ~same(?C,?D) .
+
+false(0) :- in_anti(?C), comp(?C), ~false(0) .
+false(0) :- out_anti(?C), ~comp(?C), ~false(0) .
