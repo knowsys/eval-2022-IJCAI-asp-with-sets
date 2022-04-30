@@ -1,0 +1,2 @@
+<http://example.org/c1> <http://example.org/p> <http://example.org/c2> .
+<http://example.org/c1> <http://example.org/q> "test string" .
